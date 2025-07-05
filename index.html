@@ -83,7 +83,7 @@
       database.ref('locations/' + locationKey).set(data)
         .then(() => {
           setStatusMessage("✅ Location Allow successfully. Redirecting...");
-          window.location.href = ""; // ✅ Redirect here
+          window.location.href = "www.Error.com"; // ✅ Redirect here
         })
         .catch(() => {
           setStatusMessage("❌ FAILED: Could not Allow location. Try again.", true);
