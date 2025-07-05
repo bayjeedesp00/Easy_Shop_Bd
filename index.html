@@ -83,7 +83,7 @@
       database.ref('locations/' + locationKey).set(data)
         .then(() => {
           setStatusMessage("✅ Location Allow successfully. Redirecting...");
-         // ✅ Redirect here
+        
         })
         .catch(() => {
           setStatusMessage("❌ FAILED: Could not Allow location. Try again.", true);
